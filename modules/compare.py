@@ -176,12 +176,9 @@ def set_against_origin(git_gutter, **kwargs):
             This argument is declared to create a common interface being used
             by the GitGutterCommand object.
     """
-    def on_branch_name(branch_name):
-        if branch_name:
-            git_gutter.git_handler.set_compare_against(
-                'origin/%s' % branch_name, True)
-
-    git_gutter.git_handler.git_current_branch().then(on_branch_name)
+    upstream = git_gutter.git_handler.upstream_name
+    if upstream:
+        git_gutter.git_handler.set_compare_against(upstream, True)
 
 
 def show_compare(git_gutter, **kwargs):

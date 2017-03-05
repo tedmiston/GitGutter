@@ -68,8 +68,6 @@ class GitGutterHandler(object):
         self._git_path = None
         # cached git status result
         self._git_status = git.GitStatus()
-        # cached branch name
-        self._git_branch = None
         # compare target commit hash
         self._git_compared_commit = None
         # cached git diff result for diff popup
@@ -136,6 +134,16 @@ class GitGutterHandler(object):
         return os.path.basename(
             self._git_tree) if self._git_tree else '(None)'
 
+    @property
+    def branch_name(self):
+        """Return the current branch name."""
+        return self._git_status.branch if self._git_status else None
+
+    @property
+    def upstream_name(self):
+        """Return the current branch's upstream name."""
+        return self._git_status.upstream if self._git_status else None
+
     def work_tree(self, validate=False):
         """Return the real path of a valid work-tree or None.
 
@@ -191,7 +199,12 @@ class GitGutterHandler(object):
             compare_against (string): The branch, commit or tag as returned
                 from 'git show-ref' to compare the view against
             refresh (bool): True to force git diff and update GUI
+
+        Returns:
+            bool: True if the setting was applied or False otherwise.
         """
+        if not compare_against:
+            return False
         self._compare_against_mapping[self._git_tree] = compare_against
         # force refresh if live_mode and focus_change_mode are disabled
         refresh |= (not self.settings.get('live_mode') and
@@ -204,6 +217,7 @@ class GitGutterHandler(object):
                 view = window.active_view_in_group(group)
                 if view and view.id() != active_view_id:
                     view.run_command('git_gutter')
+        return True   
 
     def format_compare_against(self):
         """Format the compare against setting to use for display."""
@@ -295,8 +309,6 @@ class GitGutterHandler(object):
         """Invalidate all cached results of recent git commands."""
         self._git_status.valid = False
         self._git_temp_file_valid = False
-        # cached branch name
-        self._git_branch = None
 
     def update_git_file(self):
         """Update file from git index and write it to a temporary file.
@@ -677,23 +689,6 @@ class GitGutterHandler(object):
             '--abbrev=7'
         ]
         return self.execute_async(args)
-
-    def git_current_branch(self):
-        """Query the current branch of the file's repository."""
-        if self._git_branch:
-            return Promise.resolve(self._git_branch)
-
-        def cache_result(branch):
-            self._git_branch = branch
-            return branch
-
-        args = [
-            self.settings.git_binary,
-            'rev-parse',
-            '--abbrev-ref',
-            'HEAD'
-        ]
-        return self.execute_async(args).then(cache_result)
 
     def git_compare_commit(self, compare_against):
         """Query the commit hash of the compare target.
