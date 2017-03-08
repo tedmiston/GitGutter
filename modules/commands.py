@@ -20,6 +20,7 @@ class GitGutterCommand(sublime_plugin.TextCommand):
         'compare_against_file_commit': compare.set_against_file_commit,
         'compare_against_branch': compare.set_against_branch,
         'compare_against_tag': compare.set_against_tag,
+        'compare_against_cached': compare.set_against_cached,
         'compare_against_head': compare.set_against_head,
         'compare_against_origin': compare.set_against_origin,
         'show_compare': compare.show_compare,
@@ -106,6 +107,12 @@ class GitGutterBaseCommand(sublime_plugin.TextCommand):
 class GitGutterShowCompareCommand(GitGutterBaseCommand):
     def run(self, edit):
         self.view.run_command('git_gutter', {'action': 'show_compare'})
+
+
+class GitGutterCompareCachedCommand(GitGutterBaseCommand):
+    def run(self, edit):
+        self.view.run_command(
+            'git_gutter', {'action': 'compare_against_cached'})
 
 
 class GitGutterCompareHeadCommand(GitGutterBaseCommand):

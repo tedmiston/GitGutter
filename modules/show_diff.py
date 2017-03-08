@@ -114,7 +114,7 @@ class GitGutterShowDiff(object):
             parts = []
             parts.append('On %s' % status.branch)
             compare = self.git_handler.format_compare_against()
-            if compare not in ('HEAD'):
+            if compare not in ('CACHED', 'HEAD'):
                 parts.append('Comparing against %s' % compare)
             if self._num_inserted:
                 parts.append('%d+' % self._num_inserted)

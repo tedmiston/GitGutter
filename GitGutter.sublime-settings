@@ -23,7 +23,7 @@
   // setting of "git_gutter_compare_against".
   // This setting only changes the default (HEAD), but can
   // still be overwritten temporarily using one of the commands
-  "compare_against": "HEAD",
+  "compare_against": "CACHED",
 
   // Live mode evaluates changes every time file is modified,
   // Set false to disable evaluation after each input
@@ -86,7 +86,7 @@
   //   {{modified}} -- number of modified lines
   "status_bar_text": [
     "In {{repo}} on {{branch}}",
-    "{% if compare not in ('HEAD', branch) %}, Comparing against {{compare}}{% endif %}",
+    "{% if compare not in ('CACHED', 'HEAD', branch) %}, Comparing against {{compare}}{% endif %}",
     ", File is {{state}}",
     "{% if deleted != 0 %}, {{deleted}}-{% endif %}",
     "{% if inserted != 0 %}, {{inserted}}+{% endif %}",

@@ -8,6 +8,10 @@
         "command": "git_gutter_show_compare"
     },
     {
+        "caption": "GitGutter: Compare Against HEAD or Staging Area",
+        "command": "git_gutter_compare_cached"
+    },
+    {
         "caption": "GitGutter: Compare Against HEAD",
         "command": "git_gutter_compare_head"
     },
