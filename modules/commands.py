@@ -86,7 +86,7 @@ class GitGutterCommand(sublime_plugin.TextCommand):
         """API entry point to run the `git_gutter` command."""
         action = kwargs.get('action')
         if action:
-            command_func = self.commands.get(action)
+            command_func = self.__class__.commands.get(action)
             assert command_func, 'Unhandled sub command "%s"' % action
             return command_func(self, **kwargs)
 

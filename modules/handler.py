@@ -114,14 +114,14 @@ class GitGutterHandler(object):
             if match:
                 # PEP-440 conform git version (major, minor, patch)
                 self._git_version = tuple(int(g) for g in match.groups())
-                if git_binary in self._missing_binaries:
+                if git_binary in self.__class__._missing_binaries:
                     utils.log_message(git_binary + ' is back on duty!')
-                    self._missing_binaries.discard(git_binary)
+                    self.__class__._missing_binaries.discard(git_binary)
             else:
                 self._git_version = None
-                if git_binary not in self._missing_binaries:
+                if git_binary not in self.__class__._missing_binaries:
                     utils.log_message(git_binary + ' not found or working!')
-                    self._missing_binaries.add(git_binary)
+                    self.__class__._missing_binaries.add(git_binary)
         return self._git_version
 
     @staticmethod
@@ -187,8 +187,8 @@ class GitGutterHandler(object):
                 The reference to compare the view against.
         """
         # Interactively specified compare target overrides settings.
-        if self._git_tree in self._compare_against_mapping:
-            return self._compare_against_mapping[self._git_tree]
+        if self._git_tree in self.__class__._compare_against_mapping:
+            return self.__class__._compare_against_mapping[self._git_tree]
         # Project settings and Preferences override plugin settings if set.
         return self.settings.get('compare_against', 'CACHED')
 
@@ -209,7 +209,7 @@ class GitGutterHandler(object):
         # Reset compare target to HEAD, if current branch is selected
         if not compare_against or compare_against == self.branch_name:
             compare_against = 'CACHED'
-        self._compare_against_mapping[self._git_tree] = compare_against
+        self.__class__._compare_against_mapping[self._git_tree] = compare_against
         # force refresh if live_mode and focus_change_mode are disabled
         refresh |= (not self.settings.get('live_mode') and
                     not self.settings.get('focus_change_mode'))
