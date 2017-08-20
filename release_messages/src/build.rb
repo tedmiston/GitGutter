@@ -19,9 +19,6 @@ files = Dir.glob(File.join(%w{release_messages src messages *.txt})).sort_by do 
   end
 end
 
-# Grab the global message
-global_message = File.read(File.join(%w{release_messages src global_message.txt}))
-
 # Remove previous build
 FileUtils.rm_rf(File.join(%w{release_messages dest .}), secure: true)
 puts "\033[0;31mDeleted\033[0m #{File.join(%w{release_messages dest *})}"
@@ -36,7 +33,6 @@ files.each do |file|
   if file == files.last || file == files.first
     msg += "\033[1;35m (with global message)\033[0m"
     contents += "\n\n" unless contents.empty?
-    contents += global_message
     if file == files.last
       File.write(File.join(%w{release_messages dest VERSION}), name)
       File.write(File.join(%w{release_messages dest PRE_RELEASE}), !!(name =~ /(?:pre|rc)/))
